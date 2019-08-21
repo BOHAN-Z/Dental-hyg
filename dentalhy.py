@@ -5,8 +5,14 @@
 #Simple menu for test only
 #V0.1
 
+"""      change
+functionalised the meal progress part
+"""
+import time
 import random
 
+def segement():
+    print("\n\n","*"*60,"\n\n")
 #check the user choosed difficulties or not
 def difficulties_check(data_list):
     try:
@@ -23,7 +29,7 @@ def import_data():
     brushing_with_soda = ["Brushing_with_soda",2,0.5]
     brushing_teeth = ["Brushing_teeth",1.5,1.5]
     #meal and snacks avalioable
-    mouthwash = ["Mouthwash",0,5,2]
+    mouthwash = ["Mouthwash",0.5,2]
     mint = ["Mint",0,3]
     green_tea_mintflav = ["Green_tea_mintflav",0.5,1.5]
     chewing_gum = ["Chewing_gum",2,1]
@@ -77,46 +83,50 @@ def import_data():
     return(data_list)
     
 
-    
-    
-    
-    
-    
 def main():#尚未完成 have not done
     import random 
     """The main menu shows t othe user when the game first open"""
     data_list = import_data()
     passed_levels = 0
-    remain_hp = 8
+    current_hp = 8
     current_clearance = 10
     current_comfortance = 10
-    data_list.append([passed_levels,remain_hp,current_clearance,current_comfortance])
+    data_list.append([passed_levels,current_hp,current_clearance,current_comfortance])
     data_list.append("easy")
     
-    avaliable_options_menu = ["g","t","q","d","s"]
-    choosed = False
-    if not choosed:
-        user_input = input("Pleased enter the option code")
-        user_input = user_input.lower()
-        if user_input in avaliable_options_menu:
-            choosed = True
-        else:
-            choosed = False
-            print("Pleade enter a valid code")
-            
-    #after choose, turn into matched defs
-    if user_input == "g":
-        level_choose(data_list)
-    elif user_input == "t":
-        test()
-    elif user_input == "q":
-        quit
-    elif user_input == "s":
-        save_data()
-    elif user_input == "d":
-        difficulties = difficulties_choose()
+    keep_going = True
+    while keep_going:
+        avaliable_options_menu = ["g","t","q","d","s"]
+        print("             Menu","\n"+"_"*30,"\n\n| G/g to game                |\n| T/t to test                |\n| D/d to difficulties choose |\n| S/s to saving data         |\n| Q/q to quit                |","\n"+"_"*30)
+        choosed = False
+        if not choosed:
+            user_input = input("Pleased enter option code \n")
+            user_input = user_input.lower()
+            if user_input in avaliable_options_menu:
+                choosed = True
+            else:
+                choosed = False
+                print("Pleade enter a valid code")
+                
+        #after choose, turn into matched defs
+        if user_input == "g":
+            segement()
+            level_choose(data_list)
+            segement()
+        elif user_input == "t":
+            segement()
+            test()
+        elif user_input == "q":
+            print("Thanks for playing")
+            segement()
+            quit
+        elif user_input == "s":
+            segement()
+            save_data()
+        elif user_input == "d":
+            segement()
+            difficulties = difficulties_choose()
 
-#难易度已完成
 #to let user choose difficulties and return to main, store into the data_list
 def difficulties_choose():#working fine
     choosed = False
@@ -135,24 +145,37 @@ def difficulties_choose():#working fine
 
 #
 def level_choose(data_list):
-    difficulties_check(data_list)
-    
-    passed_levels = data_list[2][0]
-    print("You are up to level'{}' now, max level is level 12".format(passed_levels+1))
-    user_input = str(input("Please enter c to continue or q to quit"))
-    
-    if user_input.lower() == "c":
-        game(data_list)
-    elif user_input.lower() == "q":
-        main()
-    
+    keep_going = True
+    while keep_going:
+        difficulties_check(data_list)
+        passed_levels = data_list[2][0]
+        print("Currently you are up to level'{}' now\nMax level is level 12".format(passed_levels+1))
+        print("\n\n        Options""\n"+"_"*30,"\n\n| C/c to continue            |","\n| Q/q to back to main        |","\n| R/r to Read the rules      |","\n"+"_"*30)
+        user_input = str(input("Please enter option code\n"))
+        
+        if user_input.lower() == "c":
+            segement()
+            data_list = game(data_list)
+        elif user_input.lower() == "q":
+            keep_going = False
+            return(data_list)
+        elif user_input.lower() == "r":
+            rules()
+            
+        
     
 #have not start
 #will be done after game def
 def save_data():
     pass
 
+def rules():
+    print("\n\nYou have \n7/10/10(HP/Clean Rating/Comfort rating at easy)")
+    print("7/8/8 at hard")
+    print("5/8/8 at hardest")
     
+    
+
 
 def game(data_list):
     difficulties_check(data_list)
@@ -165,13 +188,13 @@ def game(data_list):
     morning_tea_menu = data_list[1][1]
     lunch_menu = data_list[1][2]
     dinner_menu = data_list[1][3]
-
+   
     difficulty = data_list[3]
 
-    avaliable_options_difficulties = {"easy":1,"hard":2,"hardest":3}
+    avaliable_options_difficulties = {"easy":0,"hard":1,"hardest":2}
     
     #MAX hp,cleaniness,comfort_rating, depending on difficulties
-    matched_values = [[10,10,10],[7,8,8],[5,8,8]]
+    matched_values = [[7,10,10],[7,8,8],[5,8,8]]
     max_hp = matched_values[avaliable_options_difficulties[difficulty]][0]
     max_clean_rating = matched_values[avaliable_options_difficulties[difficulty]][1]
     max_comfort_rating = matched_values[avaliable_options_difficulties[difficulty]][2]
@@ -179,143 +202,226 @@ def game(data_list):
     #check the data unit is empty or not, if yes, make a new start.
     try:
         passed_levels = data_list[2][0]
-        remain_hp = data_list[2][1]
+        current_hp = data_list[2][1]
         current_clean_rating = data_list[2][2]
         current_comfort_rating = data_list[2][3]
     except:
         passed_levels = 0
-        remain_hp = max_hp
+        current_hp = max_hp
         current_clean_rating = max_cleaniness
         current_comfort_rating = max_comfort_rating
     """--------------------------------------------------"""
+
+    user_data = []
+    max_list = [max_hp,max_clean_rating,max_comfort_rating,passed_levels]
+    current_list = [current_hp,current_clean_rating,current_comfort_rating]
+    clean_list = [meal_clean,snack_clean]
+    menu_list = [breakfast_menu,morning_tea_menu,lunch_menu,dinner_menu]
+    user_data = [menu_list,clean_list,max_list,current_list,""]
+
+    keep_going = True
+    
+    while keep_going:
+        #breakfast
+        user_data[4] = "breakfast"
+        segement()
+        user_data = meal_process(user_data)
+        #morning tea
+        user_data[4] = "morning_tea"
+        segement()
+        user_data = meal_process(user_data)
+        #lunch
+        user_data[4] = "lunch"
+        segement()
+        user_data = meal_process(user_data)
+        #dinner
+        user_data[4] = "dinner"
+        segement()
+        user_data = meal_process(user_data)
         
-    ######  HARD CODING WARNING (FOR TEST ONLY, WILL CHANGE INTO A DEF LATER)
+        passed_levels += 1
+        user_data[2][3] = passed_levels
+        print("_ "*15)
+        print("Another day finished, you are up to day {} now".format(passed_levels +1))
+        user_option = str(input("Enter 'stop' to back to level choosing menu\nOr enter anykey to continue\n"))
+        print("_ "*15)
+        if user_option.lower() == "stop":
+            keep_going = False
+            user_data[3].insert(0,passed_levels)
+            data_list[2] = user_data[3]
+            return(data_list)
+        else:
+            keep_going = True
         
-    #breakfast
-    death_trigger(remain_hp)
-    meal_prop = breakfast_menu[random.randint(0,len(breakfast_menu)-1)]
-    print(meal_prop)
-    meal_name = meal_prop[0]
-    meal_clean_rating = meal_prop[1]
-    meal_comfort_rating = meal_prop[2]
+        
+            
+   
 
-    #processing of clean rating and comfort rating
-    current_clean_rating += meal_clean_rating
-    current_comfort_rating += meal_comfort_rating
-    
-    order = clean_tool_choose_meal(meal_clean)
-    print(meal_clean[order])
-    #process of hp
-    if current_clean_rating < max_clean_rating*0.5:
-        current_hp += -0.5
-        print("Your hp decreased 0.5 because of low clean rating")
-    elif current_comfort_rating < max_clean_rating*0.5:
-        current_hp += -0.5
-        print("Your hp decreased 0.5 because of low comfort rating")
-    else:
-        print("Your teeth are still comfort & clean now\nKeep it up")
-    print("\n{} remain hp\n{} current clean rating\n{} current comfort rating\n".format(remain_hp,current_clean_rating,current_comfort_rating))
-
-
-
-    #morning tea
-    death_trigger(remain_hp)
-    meal_prop = morning_tea_menu[random.randint(0,len(morning_tea_menu)-1)]
-    meal_name = meal_prop[0]
-    print(meal_prop)
-    meal_clean_rating = meal_prop[1]
-    meal_comfort_rating = meal_prop[2]
-
-    #processing of clean rating and comfort rating
-    current_clean_rating += meal_clean_rating
-    current_comfort_rating += meal_comfort_rating
-    #process of hp
-    if current_clean_rating < max_clean_rating*0.5:
-        current_hp += -0.5
-        print("Your hp decreased 0.5 because of low clean rating")
-    elif current_comfort_rating < max_clean_rating*0.5:
-        current_hp += -0.5
-        print("Your hp decreased 0.5 because of low comfort rating")
-    else:
-        print("Your teeth are still comfort & clean now\nKeep it up")
-    print("\n{} remain hp\n{} current clean rating\n{} current comfort rating\n".format(remain_hp,current_clean_rating,current_comfort_rating))
-
-
-    #lunch
-    death_trigger(remain_hp)
-    meal_prop = lunch_menu[random.randint(0,len(lunch_menu)-1)]
-    print(meal_prop)
-    meal_name = meal_prop[0]
-    meal_clean_rating = meal_prop[1]
-    meal_comfort_rating = meal_prop[2]
-
-    #processing of clean rating and comfort rating
-    current_clean_rating += meal_clean_rating
-    current_comfort_rating += meal_comfort_rating
-    #process of hp
-    if current_clean_rating < max_clean_rating*0.5:
-        current_hp += -0.5
-        print("Your hp decreased 0.5 because of low clean rating")
-    elif current_comfort_rating < max_clean_rating*0.5:
-        current_hp += -0.5
-        print("Your hp decreased 0.5 because of low comfort rating")
-    else:
-        print("Your teeth are still comfort & clean now\nKeep it up")
-    print("\n{} remain hp\n{} current clean rating\n{} current comfort rating\n".format(remain_hp,current_clean_rating,current_comfort_rating))
-
-
-    #dinner
-    death_trigger(remain_hp)
-    meal_prop = dinner_menu[random.randint(0,len(dinner_menu)-1)]
-    print(meal_prop)
-    meal_name = meal_prop[0]
-    meal_clean_rating = meal_prop[1]
-    meal_comfort_rating = meal_prop[2]
-
-    #processing of clean rating and comfort rating
-    current_clean_rating += meal_clean_rating
-    current_comfort_rating += meal_comfort_rating
-    #process of hp
-    if current_clean_rating < max_clean_rating*0.5:
-        current_hp += -0.5
-        print("Your hp decreased 0.5 because of low clean rating")
-    elif current_comfort_rating < max_clean_rating*0.5:
-        current_hp += -0.5
-        print("Your hp decreased 0.5 because of low comfort rating")
-    else:
-        print("Your teeth are still comfort & clean now\nKeep it up")
-    print("\n{} remain hp\n{} current clean rating\n{} current comfort rating\n".format(remain_hp,current_clean_rating,current_comfort_rating))
-
-    
-    
-#check hp every time
-def death_trigger(remain_hp):
-    if remain_hp == 0 or remain_hp < 0:
+def death_trigger(current_hp):
+    """
+    check user's hp every time, if <= 0 will trigger the death event
+    """
+    if current_hp == 0 or current_hp < 0:
         print("You died\nGame over")
         main()
 
 def clean_tool_choose_meal(meal_clean):
-    print(meal_clean)
+    """
+    allow user to choose a single tool to clean their teeth
+    tool name/roder must in the avaliable list
+    if no ask user to choose again
+    main meal tools
+    """
+
     name_list = []
     for i in range(len(meal_clean)):
         name_list.append(meal_clean[i][0])
-    print("-"*30)
+    print("_"*30)
+    print("_"*9,"Tool Menu","_"*10)
+    print("_"*30)
     for i in range(len(name_list)):
-        print("name:{}".format(name_list[i]))
-        print("Clean rating +{}\nComfort rating +{}".format(meal_clean[i][1],meal_clean[i][2]))
-        print("-"*30)
+        print("|Code:{}\n|name:{} ".format(i,name_list[i]))
+        print("|Clean rating +{}\n|Comfort rating +{}".format(meal_clean[i][1],meal_clean[i][2]))
+        if i == len(name_list)-1:
+            print("_"*30)
+        else:
+            print(" -"*15)
 
     choosed = False
     while not choosed:
-        user_input = str(input("Please enter name to choose"))
+        order_list = []
+        for i in range(len(name_list)):
+            order_list.append(str(i))
+            
+        user_input = str(input("Please enter name or code to choose\n"))
         if user_input in name_list:
             tool_order = name_list.index(user_input)
+            choosed = True
+        elif user_input in order_list:
+            tool_order = int(user_input)
             choosed = True
         else:
             choosed = False
             print("Invalid name")
-    return(tool_order)
+    return(meal_clean[tool_order])
     
 def clean_tool_choose_snack(snack_clean):
-    pass
+    """
+    allow user to choose a single tool to clean their teeth
+    tool name/roder must in the avaliable list
+    if no ask user to choose again
+    snack tools
+    """
+    
+    name_list = []
+    for i in range(len(snack_clean)):
+        name_list.append(snack_clean[i][0])
+    print("_"*30)
+    print("_"*9,"Tool Menu","_"*10)
+    print("_"*30)
+    for i in range(len(name_list)):
+        print("|Code:{}\n|name:{} ".format(i,name_list[i]))
+        print("|Clean rating +{}\n|Comfort rating +{}".format(meal_clean[i][1],meal_clean[i][2]))
+        if i == len(name_list)-1:
+            print("_"*30)
+        else:
+            print(" -"*15)
+
+    choosed = False
+    
+    while not choosed:
+        order_list = []
+        for i in range(len(name_list)):
+            order_list.append(str(i))
+            
+        user_input = str(input("Please enter name to choose"))
+        if user_input in name_list:
+            tool_order = name_list.index(user_input)
+            choosed = True
+        elif user_input in order_list:
+            tool_order = int(user_input)
+            choosed = True
+        else:
+            choosed = False
+            print("Invalid name")
+    return(snack_clean[tool_order])
+
+
+def meal_process(user_data):
+    """seperate the data list into small list for use later
+    identify the meal, find the matched menu and clean menu
+    check user's current hp, if = 0 then die
+    ask to choose clean tool and return properties
+    properties calculating
+    return the data list
+    """
+    #seperate
+    menu_list = user_data[0]
+    
+    meal_clean = user_data[1][0]
+    snack_clean = user_data[1][1]
+    
+    max_hp = user_data[2][0]
+    max_clean_rating = user_data[2][1]
+    max_comfort_rating = user_data[2][2]
+    current_hp = user_data[3][0]
+    current_clean_rating = user_data[3][1]
+    current_comfort_rating = user_data[3][2]
+
+    meal_list = ["breakfast","morning_tea","lunch","dinner"]
+    meal_order = meal_list.index(user_data[4])
+    meal_menu = menu_list[meal_order]
+    
+    death_trigger(current_hp)
+    
+    meal_prop = meal_menu[random.randint(0,len(meal_menu)-1)]
+
+    print("Day{} {}".format(user_data[2][3]+1,user_data[4]))
+    print(meal_prop)
+    meal_name = meal_prop[0]
+    meal_clean_rating = meal_prop[1]
+    meal_comfort_rating = meal_prop[2]
+
+    if meal_order == 1 or meal_order == 2:
+        choosed_tool_prop = clean_tool_choose_meal(snack_clean)
+        choosed_tool_name = choosed_tool_prop[0]
+        choosed_tool_clean_rating = choosed_tool_prop[1]
+        choosed_tool_comfort_rating = choosed_tool_prop[2]
+    else:
+        choosed_tool_prop = clean_tool_choose_meal(meal_clean)
+        choosed_tool_name = choosed_tool_prop[0]
+        choosed_tool_clean_rating = choosed_tool_prop[1]
+        choosed_tool_comfort_rating = choosed_tool_prop[2]
+
+    #processing of clean rating and comfort rating
+    current_clean_rating += meal_clean_rating
+    current_clean_rating += choosed_tool_clean_rating
+    current_comfort_rating += meal_comfort_rating
+    current_comfort_rating += choosed_tool_comfort_rating
+
+    #limit the max ratings
+    if current_clean_rating > max_clean_rating:
+        current_clean_rating = max_clean_rating
+    if current_comfort_rating > max_comfort_rating:
+        current_comfort_rating = max_comfort_rating
+    
+    #process of hp
+    if current_clean_rating < max_clean_rating*0.5:
+        current_hp += -0.5
+        print("Your hp decreased 0.5 because of low clean rating")
+    elif current_comfort_rating < max_clean_rating*0.5:
+        current_hp += -0.5
+        print("Your hp decreased 0.5 because of low comfort rating")
+    else:
+        print("Your teeth are still comfort & clean now\nKeep it up")
+    print("\n{} current hp\n{} current clean rating\n{} current comfort rating\n".format(current_hp,current_clean_rating,current_comfort_rating))
+    current_list = [current_hp,current_clean_rating,current_comfort_rating]
+    user_data[3] = current_list
+    return(user_data)
+    
 main()
+    
+
+        
+    
+    
