@@ -20,7 +20,7 @@ def import_data():
     """Import the data at the start of game every time"""
     #name clean_rating comfort_rating
     #for meal only 
-    brushing_with_soda = ["Brushing_with_soda"]
+    brushing_with_soda = ["Brushing_with_soda",2,0.5]
     brushing_teeth = ["Brushing_teeth",1.5,1.5]
     #meal and snacks avalioable
     mouthwash = ["Mouthwash",0,5,2]
@@ -193,7 +193,7 @@ def game(data_list):
         
     #breakfast
     death_trigger(remain_hp)
-    meal_prop = breakfast_menu[random.randint(0,len(breakfast_menu))]
+    meal_prop = breakfast_menu[random.randint(0,len(breakfast_menu)-1)]
     print(meal_prop)
     meal_name = meal_prop[0]
     meal_clean_rating = meal_prop[1]
@@ -202,6 +202,9 @@ def game(data_list):
     #processing of clean rating and comfort rating
     current_clean_rating += meal_clean_rating
     current_comfort_rating += meal_comfort_rating
+    
+    order = clean_tool_choose_meal(meal_clean)
+    print(meal_clean[order])
     #process of hp
     if current_clean_rating < max_clean_rating*0.5:
         current_hp += -0.5
@@ -217,7 +220,7 @@ def game(data_list):
 
     #morning tea
     death_trigger(remain_hp)
-    meal_prop = morning_tea_menu[random.randint(0,len(morning_tea_menu))]
+    meal_prop = morning_tea_menu[random.randint(0,len(morning_tea_menu)-1)]
     meal_name = meal_prop[0]
     print(meal_prop)
     meal_clean_rating = meal_prop[1]
@@ -240,7 +243,7 @@ def game(data_list):
 
     #lunch
     death_trigger(remain_hp)
-    meal_prop = lunch_menu[random.randint(0,len(lunch_menu))]
+    meal_prop = lunch_menu[random.randint(0,len(lunch_menu)-1)]
     print(meal_prop)
     meal_name = meal_prop[0]
     meal_clean_rating = meal_prop[1]
@@ -263,7 +266,7 @@ def game(data_list):
 
     #dinner
     death_trigger(remain_hp)
-    meal_prop = dinner_menu[random.randint(0,len(dinner_menu))]
+    meal_prop = dinner_menu[random.randint(0,len(dinner_menu)-1)]
     print(meal_prop)
     meal_name = meal_prop[0]
     meal_clean_rating = meal_prop[1]
@@ -292,9 +295,27 @@ def death_trigger(remain_hp):
         main()
 
 def clean_tool_choose_meal(meal_clean):
-    pass
+    print(meal_clean)
+    name_list = []
+    for i in range(len(meal_clean)):
+        name_list.append(meal_clean[i][0])
+    print("-"*30)
+    for i in range(len(name_list)):
+        print("name:{}".format(name_list[i]))
+        print("Clean rating +{}\nComfort rating +{}".format(meal_clean[i][1],meal_clean[i][2]))
+        print("-"*30)
+
+    choosed = False
+    while not choosed:
+        user_input = str(input("Please enter name to choose"))
+        if user_input in name_list:
+            tool_order = name_list.index(user_input)
+            choosed = True
+        else:
+            choosed = False
+            print("Invalid name")
+    return(tool_order)
+    
 def clean_tool_choose_snack(snack_clean):
     pass
 main()
-    
-
